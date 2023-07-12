@@ -1,3 +1,4 @@
+package mypkg
 
 func judge() bool {
 	for i := 0; i < boardSize; i++ {
