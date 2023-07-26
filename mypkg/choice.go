@@ -98,7 +98,7 @@ func hasValidMove(player string, board [8][8]string, currentPlayer string) bool 
 	return false
 }
 
-//game over
+// game over
 func isGameOver(PlayerBlack string, PlayerWhite string, board [8][8]string, currentPlayer string) bool {
 	return !hasValidMove(PlayerBlack, board, currentPlayer) && !hasValidMove(PlayerWhite, board, currentPlayer)
 }
@@ -123,6 +123,7 @@ func ReverChess(row int, col int, NowPlayer string, board [8][8]string) ([8][8]s
 						flag = true
 					}
 				}
+				break
 			}
 		}
 
@@ -141,6 +142,7 @@ func ReverChess(row int, col int, NowPlayer string, board [8][8]string) ([8][8]s
 						flag = true
 					}
 				}
+				break
 			}
 		}
 
@@ -158,6 +160,7 @@ func ReverChess(row int, col int, NowPlayer string, board [8][8]string) ([8][8]s
 						flag = true
 					}
 				}
+				break
 			}
 		}
 
@@ -175,6 +178,7 @@ func ReverChess(row int, col int, NowPlayer string, board [8][8]string) ([8][8]s
 						flag = true
 					}
 				}
+				break
 			}
 		}
 
@@ -196,6 +200,7 @@ func ReverChess(row int, col int, NowPlayer string, board [8][8]string) ([8][8]s
 					i = i - 1
 					j = j - 1
 				}
+				break
 			}
 		}
 		//down-right
@@ -215,6 +220,7 @@ func ReverChess(row int, col int, NowPlayer string, board [8][8]string) ([8][8]s
 					i = i + 1
 					j = j + 1
 				}
+				break
 			}
 		}
 
@@ -235,6 +241,7 @@ func ReverChess(row int, col int, NowPlayer string, board [8][8]string) ([8][8]s
 					i = i - 1
 					j = j + 1
 				}
+				break
 			}
 		}
 
@@ -256,6 +263,7 @@ func ReverChess(row int, col int, NowPlayer string, board [8][8]string) ([8][8]s
 					i = i + 1
 					j = j - 1
 				}
+				break
 			}
 		}
 		return board, Score + 1
