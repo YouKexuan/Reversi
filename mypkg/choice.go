@@ -133,6 +133,7 @@ func ReverChess(row int, col int, NowPlayer string, board [8][8]string) ([8][8]s
 				break
 			}
 			if board[dr][dc] == NowPlayer {
+				fmt.Println(dc)
 				for i := col; i < dc; i = i + 1 {
 					if board[row][i] == anotherPlayer {
 						Score = Score + 1
