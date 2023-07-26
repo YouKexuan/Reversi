@@ -28,8 +28,9 @@ func initialBoard() {
 }
 
 func printBoard() {
-	fmt.Println(" 0  1  2  3  4  5  6  7 ")
+	fmt.Println("  0  1  2  3  4  5  6  7 ")
 	for i := 0; i < boardSize; i++ {
+		fmt.Print(i)
 		for j := 0; j < boardSize; j++ {
 			fmt.Print(board[i][j])
 		}
@@ -68,12 +69,13 @@ func main() {
 	initialBoard()
 	printBoard()
 	// Round Start
-	var col, raw int
+	var col, row int
 	currentPlayer = playerBlack
 	for {
+		fmt.Println("current Player: ", currentPlayer)
 		fmt.Println("Input Chess(X,Y): ")
-		fmt.Scan(&raw, &col)
-		board = mypkg.ChoicePos(raw, col, currentPlayer, board)
+		fmt.Scan(&row, &col)
+		board = mypkg.ChoicePos(row, col, currentPlayer, board)
 		printBoard()
 		if currentPlayer == playerBlack {
 			currentPlayer = playerWhite
@@ -81,6 +83,8 @@ func main() {
 			currentPlayer = playerBlack
 		}
 		blackCount, whiteCount := counts()
+		fmt.Println("Black number: ", blackCount)
+		fmt.Println("White number: ", whiteCount)
 		if blackCount+whiteCount == boardSize*boardSize {
 			winner(blackCount, whiteCount)
 		}
