@@ -3,6 +3,8 @@ package main
 import (
 	"Reversi/mypkg"
 	"fmt"
+	"math/rand"
+	"time"
 )
 
 const (
@@ -63,6 +65,17 @@ func winner(blackCount int, whiteCount int) string {
 	}
 }
 
+func getRandomMove(currentPlayer string, board [boardSize][boardSize]string) (int, int) {
+	rand.Seed(time.Now().UnixNano()) // Initialize random seed
+	for {
+		row := rand.Intn(boardSize)
+		col := rand.Intn(boardSize)
+		if mypkg.IsValidMove(row, col, board, currentPlayer) {
+			return row, col
+		}
+	}
+}
+
 // TODO:Computer Player
 // TODO:Time Limit
 
@@ -71,31 +84,73 @@ func main() {
 	printBoard()
 	// Round Start
 	var col, raw int
+	var flag int
 	currentPlayer = playerBlack
-	for !mypkg.IsGameOver(playerBlack, playerWhite, board, currentPlayer) {
-		blackCount, whiteCount := counts()
-		fmt.Println("Black Count: ", blackCount)
-		fmt.Println("White Count: ", whiteCount)
-		fmt.Println("Current Player: ", currentPlayer)
-		fmt.Println("Input Chess(X,Y): ")
-		fmt.Scan(&raw, &col)
-		board = mypkg.ChoicePos(raw, col, currentPlayer, board)
+	fmt.Println("Chose a mode: 1.normal  2.computer")
+	fmt.Scan(&flag)
+	if flag == 1 {
+		for !mypkg.IsGameOver(playerBlack, playerWhite, board, currentPlayer) {
+			blackCount, whiteCount := counts()
+			fmt.Println("Black Count: ", blackCount)
+			fmt.Println("White Count: ", whiteCount)
+			fmt.Println("Current Player: ", currentPlayer)
+			fmt.Println("Input Chess(X,Y): ")
+			fmt.Scan(&raw, &col)
+			board = mypkg.ChoicePos(raw, col, currentPlayer, board)
+			printBoard()
+			if currentPlayer == playerBlack {
+				currentPlayer = playerWhite
+			} else {
+				currentPlayer = playerBlack
+			}
+			// if blackCount+whiteCount == boardSize*boardSize {
+			// 	winner(blackCount, whiteCount)
+			// }
+		}
+		// Round End
+		fmt.Print("---------------------------\n")
 		printBoard()
-		if currentPlayer == playerBlack {
-			currentPlayer = playerWhite
-		} else {
-			currentPlayer = playerBlack
+		blackCount, whiteCount := counts()
+		fmt.Printf("Game Over! Winner: %s\n", winner(blackCount, whiteCount))
+		fmt.Printf("Black Pieces: %d\n", blackCount)
+		fmt.Printf("White Pieces: %d\n", whiteCount)
+	} else {
+		for !mypkg.IsGameOver(playerBlack, playerWhite, board, currentPlayer) {
+			blackCount, whiteCount := counts()
+			fmt.Println("Black Count: ", blackCount)
+			fmt.Println("White Count: ", whiteCount)
+			fmt.Println("Current Player: ", currentPlayer)
+
+			if currentPlayer == playerBlack {
+				// Human player's turn
+				fmt.Println("Input Chess(X,Y): ")
+				fmt.Scan(&raw, &col)
+			} else {
+				// Computer player's turn
+				raw, col = getRandomMove(currentPlayer, board)
+				fmt.Printf("Computer plays at position (%d, %d)\n", raw, col)
+			}
+
+			board = mypkg.ChoicePos(raw, col, currentPlayer, board)
+			printBoard()
+
+			if currentPlayer == playerBlack {
+				currentPlayer = playerWhite
+			} else {
+				currentPlayer = playerBlack
+			}
+
+			// if blackCount+whiteCount == boardSize*boardSize {
+			// 	winner(blackCount, whiteCount)
+			// }
 		}
-		if blackCount+whiteCount == boardSize*boardSize {
-			winner(blackCount, whiteCount)
-		}
+		// Round End
+		fmt.Print("---------------------------\n")
+		printBoard()
+		blackCount, whiteCount := counts()
+		fmt.Printf("Game Over! Winner: %s\n", winner(blackCount, whiteCount))
+		fmt.Printf("Black Pieces: %d\n", blackCount)
+		fmt.Printf("White Pieces: %d\n", whiteCount)
 	}
-	// Round End
-	fmt.Print("---------------------------\n")
-	printBoard()
-	blackCount, whiteCount := counts()
-	fmt.Printf("Game Over! Winner: %s\n", winner(blackCount, whiteCount))
-	fmt.Printf("Black Pieces: %d\n", blackCount)
-	fmt.Printf("White Pieces: %d\n", whiteCount)
 
 }
