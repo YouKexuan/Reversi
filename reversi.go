@@ -8,8 +8,8 @@ import (
 const (
 	boardSize   = 8
 	emptyCell   = " . "
-	playerBlack = " x "
-	playerWhite = " o "
+	playerBlack = " Åú "
+	playerWhite = " Åõ "
 )
 
 var board [boardSize][boardSize]string
