@@ -8,8 +8,8 @@ import (
 const (
 	boardSize   = 8
 	emptyCell   = " . "
-	playerBlack = " Åú "
-	playerWhite = " Åõ "
+	playerBlack = " x "
+	playerWhite = " o "
 )
 
 var board [boardSize][boardSize]string
@@ -28,6 +28,7 @@ func initialBoard() {
 }
 
 func printBoard() {
+	fmt.Println("---------------------------")
 	fmt.Println("    0  1  2  3  4  5  6  7 ")
 	for i := 0; i < boardSize; i++ {
 		fmt.Print(" ", i, " ")
@@ -90,6 +91,7 @@ func main() {
 		}
 	}
 	// Round End
+	fmt.Print("---------------------------\n")
 	printBoard()
 	blackCount, whiteCount := counts()
 	fmt.Printf("Game Over! Winner: %s\n", winner(blackCount, whiteCount))
