@@ -7,13 +7,13 @@ import (
 const (
 	boardSize   = 8
 	emptyCell   = " . "
-	playerBlack = " ● "
-	playerWhite = " ○ "
+	playerBlack = " x "
+	playerWhite = " o "
 )
 
 func ChoicePos(row int, col int, NowPlayer string, board [8][8]string) [8][8]string {
 	//SET CHESS
-	if isEmpty(row, col, board) {
+	if IsValidMove(row, col, board, NowPlayer) {
 		board[row][col] = NowPlayer
 		board = ReverChess(row, col, NowPlayer, board)
 		return board
@@ -42,11 +42,67 @@ func playerChange(currentPlayer string) string {
 	return currentPlayer
 }
 
+func IsValidMove(row int, col int, board [8][8]string, currentPlayer string) bool {
+	if row < 0 || row >= boardSize || col < 0 || col >= boardSize || board[row][col] != emptyCell {
+		return false
+	}
+	// Check if at least one piece can be flipped in any direction
+	for dr := -1; dr <= 1; dr++ {
+		for dc := -1; dc <= 1; dc++ {
+			if dr == 0 && dc == 0 {
+				continue
+			}
+			if checkDirection(row, col, dr, dc, currentPlayer, board) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// checkDirection checks if there are pieces to flip in a specific direction.
+func checkDirection(row int, col int, dr int, dc int, currentPlayer string, board [8][8]string) bool {
+	anotherPlayer := playerChange(currentPlayer)
+
+	r, c := row+dr, col+dc
+
+	// Check if the first piece in the direction is the other player's piece
+	if r >= 0 && r < boardSize && c >= 0 && c < boardSize && board[r][c] == anotherPlayer {
+		// Keep moving in the direction until an empty cell or the current player's piece is found
+		for r >= 0 && r < boardSize && c >= 0 && c < boardSize {
+			if board[r][c] == emptyCell {
+				return false
+			} else if board[r][c] == currentPlayer {
+				return true
+			}
+			r += dr
+			c += dc
+		}
+	}
+	return false
+}
+
+// hasValidMove checks if the current player has a valid move.
+func hasValidMove(player string, board [8][8]string, currentPlayer string) bool {
+	for row := 0; row < boardSize; row++ {
+		for col := 0; col < boardSize; col++ {
+			if IsValidMove(row, col, board, currentPlayer) && board[row][col] == emptyCell {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func IsGameOver(playerBlack string, playerWhite string, board [8][8]string, currentPlayer string) bool {
+	return !hasValidMove(playerBlack, board, currentPlayer) && !hasValidMove(playerWhite, board, currentPlayer)
+}
+
 func ReverChess(raw int, col int, NowPlayer string, board [8][8]string) [8][8]string {
 	//left
 	anotherPlayer := playerChange(NowPlayer)
 
-	for dr, dc := raw, col; dr >= 0 && dc >= 0 && dr < 8 && dc < 8; {
+	for dr, dc := raw, col; dr >= 0 && dc > 0 && dr < 8 && dc < 8; {
 		dc = dc - 1
 		if board[dr][dc] == emptyCell {
 			break
@@ -61,7 +117,7 @@ func ReverChess(raw int, col int, NowPlayer string, board [8][8]string) [8][8]st
 	}
 
 	//right
-	for dr, dc := raw, col; dr >= 0 && dc >= 0 && dr < 8 && dc < 8; {
+	for dr, dc := raw, col; dr >= 0 && dc >= 0 && dr < 8 && dc < 7; {
 		dc = dc + 1
 		if board[dr][dc] == emptyCell {
 			break
@@ -76,37 +132,37 @@ func ReverChess(raw int, col int, NowPlayer string, board [8][8]string) [8][8]st
 	}
 
 	//up
-	for dr, dc := raw, col; dr >= 0 && dc >= 0 && dr < 8 && dc < 8; {
+	for dr, dc := raw, col; dr > 0 && dc >= 0 && dr < 8 && dc < 8; {
 		dr = dr - 1
 		if board[dr][dc] == emptyCell {
 			break
 		}
 		if board[dr][dc] == NowPlayer {
-			for i := raw; i < dr; i = i - 1 {
-				if board[raw][i] == anotherPlayer {
-					board[raw][i] = NowPlayer
+			for i := raw; i > dr; i = i - 1 {
+				if board[i][col] == anotherPlayer {
+					board[i][col] = NowPlayer
 				}
 			}
 		}
 	}
 
 	//down
-	for dr, dc := raw, col; dr >= 0 && dc >= 0 && dr < 8 && dc < 8; {
+	for dr, dc := raw, col; dr >= 0 && dc >= 0 && dr < 7 && dc < 8; {
 		dr = dr + 1
 		if board[dr][dc] == emptyCell {
 			break
 		}
 		if board[dr][dc] == NowPlayer {
-			for i := raw; i > dr; i = i + 1 {
-				if board[raw][i] == anotherPlayer {
-					board[raw][i] = NowPlayer
+			for i := raw; i < dr; i = i + 1 {
+				if board[i][col] == anotherPlayer {
+					board[i][col] = NowPlayer
 				}
 			}
 		}
 	}
 
 	//up-left
-	for dr, dc := raw, col; dr >= 0 && dc >= 0 && dr < 8 && dc < 8; {
+	for dr, dc := raw, col; dr > 0 && dc > 0 && dr < 8 && dc < 8; {
 		dr = dr - 1
 		dc = dc - 1
 		if board[dr][dc] == emptyCell {
@@ -123,7 +179,7 @@ func ReverChess(raw int, col int, NowPlayer string, board [8][8]string) [8][8]st
 		}
 	}
 	//down-right
-	for dr, dc := raw, col; dr >= 0 && dc >= 0 && dr < 8 && dc < 8; {
+	for dr, dc := raw, col; dr >= 0 && dc >= 0 && dr < 7 && dc < 7; {
 		dr = dr + 1
 		dc = dc + 1
 		if board[dr][dc] == emptyCell {
@@ -141,7 +197,7 @@ func ReverChess(raw int, col int, NowPlayer string, board [8][8]string) [8][8]st
 	}
 
 	//up-right
-	for dr, dc := raw, col; dr >= 0 && dc >= 0 && dr < 8 && dc < 8; {
+	for dr, dc := raw, col; dr > 0 && dc >= 0 && dr < 8 && dc < 7; {
 		dr = dr - 1
 		dc = dc + 1
 		if board[dr][dc] == emptyCell {
@@ -159,7 +215,7 @@ func ReverChess(raw int, col int, NowPlayer string, board [8][8]string) [8][8]st
 	}
 
 	//down-left
-	for dr, dc := raw, col; dr >= 0 && dc >= 0 && dr < 8 && dc < 8; {
+	for dr, dc := raw, col; dr >= 0 && dc > 0 && dr < 7 && dc < 8; {
 		dr = dr + 1
 		dc = dc - 1
 		if board[dr][dc] == emptyCell {
