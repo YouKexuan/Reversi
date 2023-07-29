@@ -8,8 +8,8 @@ import (
 const (
 	boardSize   = 8
 	emptyCell   = " . "
-	playerBlack = " ● "
-	playerWhite = " ○ "
+	playerBlack = " x "
+	playerWhite = " o "
 )
 
 var board [boardSize][boardSize]string
@@ -28,8 +28,9 @@ func initialBoard() {
 }
 
 func printBoard() {
-	fmt.Println(" 0  1  2  3  4  5  6  7 ")
+	fmt.Println("    0  1  2  3  4  5  6  7 ")
 	for i := 0; i < boardSize; i++ {
+		fmt.Print(" ", i, " ")
 		for j := 0; j < boardSize; j++ {
 			fmt.Print(board[i][j])
 		}
@@ -70,7 +71,11 @@ func main() {
 	// Round Start
 	var col, raw int
 	currentPlayer = playerBlack
-	for {
+	for !mypkg.IsGameOver(playerBlack, playerWhite, board, currentPlayer) {
+		blackCount, whiteCount := counts()
+		fmt.Println("Black Count: ", blackCount)
+		fmt.Println("White Count: ", whiteCount)
+		fmt.Println("Current Player: ", currentPlayer)
 		fmt.Println("Input Chess(X,Y): ")
 		fmt.Scan(&raw, &col)
 		board = mypkg.ChoicePos(raw, col, currentPlayer, board)
@@ -80,10 +85,15 @@ func main() {
 		} else {
 			currentPlayer = playerBlack
 		}
-		blackCount, whiteCount := counts()
 		if blackCount+whiteCount == boardSize*boardSize {
 			winner(blackCount, whiteCount)
 		}
 	}
 	// Round End
+	printBoard()
+	blackCount, whiteCount := counts()
+	fmt.Printf("Game Over! Winner: %s\n", winner(blackCount, whiteCount))
+	fmt.Printf("Black Pieces: %d\n", blackCount)
+	fmt.Printf("White Pieces: %d\n", whiteCount)
+
 }
