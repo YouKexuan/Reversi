@@ -13,7 +13,7 @@ const (
 
 func ChoicePos(row int, col int, NowPlayer string, board [8][8]string) [8][8]string {
 	//SET CHESS
-	if isValidMove(row, col, board, NowPlayer) {
+	if IsValidMove(row, col, board, NowPlayer) {
 		board[row][col] = NowPlayer
 		board = ReverChess(row, col, NowPlayer, board)
 		return board
@@ -42,7 +42,7 @@ func playerChange(currentPlayer string) string {
 	return currentPlayer
 }
 
-func isValidMove(row int, col int, board [8][8]string, currentPlayer string) bool {
+func IsValidMove(row int, col int, board [8][8]string, currentPlayer string) bool {
 	if row < 0 || row >= boardSize || col < 0 || col >= boardSize || board[row][col] != emptyCell {
 		return false
 	}
@@ -86,7 +86,7 @@ func checkDirection(row int, col int, dr int, dc int, currentPlayer string, boar
 func hasValidMove(player string, board [8][8]string, currentPlayer string) bool {
 	for row := 0; row < boardSize; row++ {
 		for col := 0; col < boardSize; col++ {
-			if isValidMove(row, col, board, currentPlayer) && board[row][col] == emptyCell {
+			if IsValidMove(row, col, board, currentPlayer) && board[row][col] == emptyCell {
 				return true
 			}
 		}
