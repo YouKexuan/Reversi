@@ -45,7 +45,7 @@ func playerChange(currentPlayer string) string {
 	return currentPlayer
 }
 
-func isValidMove(row int, col int, board [8][8]string, currentPlayer string) bool {
+func IsValidMove(row int, col int, board [8][8]string, currentPlayer string) bool {
 	if row < 0 || row >= BoardSize || col < 0 || col >= BoardSize || board[row][col] != emptyCell {
 		return false
 	}
@@ -90,7 +90,7 @@ func checkDirection(row int, col int, dr int, dc int, currentPlayer string, boar
 func hasValidMove(player string, board [8][8]string, currentPlayer string) bool {
 	for row := 0; row < BoardSize; row++ {
 		for col := 0; col < BoardSize; col++ {
-			if isValidMove(row, col, board, currentPlayer) && board[row][col] == emptyCell {
+			if IsValidMove(row, col, board, currentPlayer) && board[row][col] == emptyCell {
 				return true
 			}
 		}
@@ -99,7 +99,7 @@ func hasValidMove(player string, board [8][8]string, currentPlayer string) bool 
 }
 
 // game over
-func isGameOver(PlayerBlack string, PlayerWhite string, board [8][8]string, currentPlayer string) bool {
+func IsGameOver(PlayerBlack string, PlayerWhite string, board [8][8]string, currentPlayer string) bool {
 	return !hasValidMove(PlayerBlack, board, currentPlayer) && !hasValidMove(PlayerWhite, board, currentPlayer)
 }
 
@@ -134,7 +134,6 @@ func ReverChess(row int, col int, NowPlayer string, board [8][8]string) ([8][8]s
 				break
 			}
 			if board[dr][dc] == NowPlayer {
-				fmt.Println(dc)
 				for i := col; i < dc; i = i + 1 {
 					if board[row][i] == anotherPlayer {
 						Score = Score + 1
